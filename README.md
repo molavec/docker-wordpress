@@ -1,57 +1,70 @@
 # Docker Wordpress
 
-Permite levantar Wordpress rápidamente con Docker
+Fast Development enviroment for Wordpress using docker
 
-## Usuario Wordpress
+## Wordpress User
 ```
 User: root
 pass: root
 email: root@mail.com
 ```
-Si se parte con una versión limpia utilizar estas credenciales para estándarizar. 
 
 ## How to
 
-Levantar el servidor
-
+Start server
 ```bash
 docker-compose up
 ```
 
-Detener el servidor
-
+Stop server
 ```bash
 docker-compose stop
 ```
-Eliminar el contenedor
 
+Delete container
 ```bash
 docker-compose rm
 ```
 
+## Themes files
+Theme files in `wp-content/themes`
 
-## Errores conocidos (Throubleshooting)
+## Plugins files
+Plugins files in `wp-content/plugins`
 
-### Falla en la instalación de Wordpress
-Cuando falla la conexión con el instalador de wordpress en necesario descargarlo manualmente:
+## Database files
+Dababase files in `data`
+
+## Throubleshooting
+
+### Downloading Wordpress Failure 
+
+Wordpress image tries download latest Wordpress and install it in container.
+Sometimes this action fail for this causes:
+
+* Internet connection error
+* Server doesn't respond
+
+**Solution:** Enter to container shell and try download wordpress manually.
 ```bash
 docker-compose exec wordpress /bin/bash
 wp core download
 ```
 
-### Permisos 
-Como docker escribe en los archivos cambia los permisos.
-Simplemente otorgar todos los permisos ayuda.
+### Files permissions
+
+Docker container is owner of files in `themes`, `plugins` and `database` files. It causes permission error when edit files is needed.
+
+**Solution:** Change files permission for these folders
 ```bash
 sudo chmod -R 777 data
 sudo chmod -R 777 wp-content
 ```
 
-### En caso de lentitud
+### Wordpress is extremelly slow in page load
+As Mac and Windows use a different filesystem to manage files this cause bottleneck in when data from shared folder is required.
 
-Es posible que sistemas Windows y Mac haya lentitud cuando se comparten archivos del proyecto mediante volumenes, debido a la diferencias entre los sistemas de archivos.
-
-Probar esta forma de montar volumenes.
+Try with this way to load volumes.
 
 ```yaml
 volumes:
