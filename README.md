@@ -35,7 +35,62 @@ Plugins files in `wp-content/plugins`
 ## Database files
 Dababase files in `data`
 
-## Throubleshooting
+
+# Useful Tips
+
+## Add a phpinfo.php
+
+With wordpress container running
+```bash
+docker-compose exec wordpress /bin/bash -c "echo '<?php phpinfo(); ?>' > /var/www/html/phpinfo.php"
+```
+then, open next url in your browser
+```
+http://localhost:8080/phpinfo.php
+```
+
+## php.ini - Add custom php
+
+* Customize `php-conf/php.ini`
+* Upload to wordpress container
+* Restart wordpress contanier
+
+```bash
+# copy php.ini to container\
+docker-compose cp php-conf/php.ini wordpress:/usr/local/etc/php/
+
+# restart container\
+docker-compose restart wordpress
+```
+
+## php.ini - Add custom php (Volume alternative)
+
+* Customize `php-conf/php.ini`
+* Uncomment volume in `docker-compose.yml`
+```yaml
+volumes:
+  ...
+  - ./php-conf/php.ini:/usr/local/etc/php/php.ini
+```
+* Up containers
+```yaml
+docker-compose up -d
+```
+**Important Note:** Restart wordpress container on every change in `php.ini`
+
+
+## List files in Wordpress directory
+```bash
+docker-compose exec wordpress /bin/bash -c "ls -la"
+```
+
+## List files in Configuration File (php.ini) Path directory
+```bash
+docker-compose exec wordpress /bin/bash -c "ls -la /usr/local/etc/php"
+```
+
+
+# Throubleshooting
 
 ### Downloading Wordpress Failure 
 
